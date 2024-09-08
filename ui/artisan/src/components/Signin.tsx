@@ -46,7 +46,7 @@ function SignIn() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.access_token); // Save token
-        navigate("/home"); // Navigate to home page after login
+        navigate("/dashboard"); // Navigate to home page after login
       } else {
         const errMsg = await response.json();
         setError(errMsg.detail);

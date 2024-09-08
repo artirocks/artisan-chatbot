@@ -12,14 +12,14 @@ import {
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 export const Header = () => {
-  const navigate = useNavigate(); // Hook for programmatic navigation
+  const navigate = useNavigate(); 
 
   const handleLoginClick = () => {
-    navigate("/signin"); // Navigate to the login route
+    navigate("/signin"); 
   };
 
   const handleLogoClick = () => {
-    navigate("/"); // Navigate to the login route
+    navigate("/"); 
   };
   return (
     <HStack>
