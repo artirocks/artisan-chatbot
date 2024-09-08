@@ -9,6 +9,7 @@ import theme from "./theme/theme.js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/Dashboard.tsx";
 import { Navigate } from "react-router-dom";
+import AvaChatbot from "./components/AvaChatbot.tsx";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -24,6 +25,7 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/chats" element={<PrivateRoute><AvaChatbot /></PrivateRoute>} />
         </Routes>
       </Router>
       </ChakraBaseProvider>
