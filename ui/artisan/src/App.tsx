@@ -7,6 +7,13 @@ import SignIn from "./components/Signin.tsx";
 import SignUp from "./components/Signup.tsx";
 import theme from "./theme/theme.js";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Dashboard } from "./components/Dashboard.tsx";
+import { Navigate } from "react-router-dom";
+
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/signin" />;
+};
 
 function App() {
   return (
@@ -16,6 +23,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         </Routes>
       </Router>
       </ChakraBaseProvider>

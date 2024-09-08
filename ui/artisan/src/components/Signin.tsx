@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "./Header.tsx";
 import {
   Box,
   Flex,
@@ -9,10 +8,10 @@ import {
   FormLabel,
   Heading,
   Input,
-  Link,
-  Switch,
   Text,
   useColorModeValue,
+  Link,
+  Switch,
   Image,
   Divider,
   AbsoluteCenter,
@@ -20,24 +19,57 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FaGoogle } from "react-icons/fa";
+import { Header } from "./Header.tsx";
 import signInImage from "../assets/img/login.png";
-
 function SignIn() {
-  const navigate = useNavigate(); // Hook for programmatic navigation
-
-  const handleHomeClick = () => {
-    navigate("/"); // Navigate to the login route
-  };
-  const handleSignupClick = () => {
-    navigate("/signup"); // Navigate to the login route
-  };
-  // Chakra color mode
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const titleColor = useColorModeValue("purple.300", "purple.200");
   const textColor = useColorModeValue("gray.400", "white");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/authenticate/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          username: email,
+          password: password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("token", data.access_token); // Save token
+        navigate("/home"); // Navigate to home page after login
+      } else {
+        const errMsg = await response.json();
+        setError(errMsg.detail);
+      }
+    } catch (error) {
+      // setError("Something went wrong. Please try again.");
+    }
+  };
+
+  const handleHomeClick = () => {
+    navigate("/");
+  };
+  const handleSignupClick = () => {
+    navigate("/signup");
+  };
+
   return (
     <Box>
-      <Box mt={"20px"}><Header /></Box>
-      <Flex position="relative" mb="40px" >
+      <Box mt={"20px"}>
+        <Header />
+      </Box>
+
+      <Flex position="relative" mb="40px">
         <Flex
           h={{ sm: "initial", md: "75vh", lg: "85vh" }}
           w="100%"
@@ -108,59 +140,72 @@ function SignIn() {
                 <Divider borderColor="orange.500" color={"yellow"} />
                 <AbsoluteCenter px="4">or</AbsoluteCenter>
               </Box>
+
               <FormControl>
-                <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-                  Email
-                </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  mb="24px"
-                  fontSize="sm"
-                  type="text"
-                  placeholder="Your email adress"
-                  size="lg"
-                />
-                <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-                  Password
-                </FormLabel>
-                <Input
-                  borderRadius="15px"
-                  mb="36px"
-                  fontSize="sm"
-                  type="password"
-                  placeholder="Your password"
-                  size="lg"
-                />
-                <FormControl display="flex" alignItems="center">
-                  <Switch id="remember-login" colorScheme="purple" me="10px" />
-                  <FormLabel
-                    htmlFor="remember-login"
-                    mb="0"
-                    ms="1"
-                    fontWeight="normal"
-                  >
-                    Remember me
+                <form onSubmit={handleLogin}>
+                  <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                    Email
                   </FormLabel>
-                </FormControl>
-                <Button
-                  fontSize="18px"
-                  type="submit"
-                  bg="purple.300"
-                  w="100%"
-                  h="45"
-                  mb="20px"
-                  color="white"
-                  mt="20px"
-                  _hover={{
-                    bg: "purple.200",
-                  }}
-                  _active={{
-                    bg: "purple.400",
-                  }}
-                >
-                  SIGN IN
-                </Button>
+                  <Input
+                    borderRadius="15px"
+                    mb="24px"
+                    fontSize="sm"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    size="lg"
+                  />
+                  <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                    Password
+                  </FormLabel>
+                  <Input
+                    borderRadius="15px"
+                    mb="36px"
+                    fontSize="sm"
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    size="lg"
+                  />
+                  <FormControl display="flex" alignItems="center">
+                    <Switch
+                      id="remember-login"
+                      colorScheme="purple"
+                      me="10px"
+                    />
+                    <FormLabel
+                      htmlFor="remember-login"
+                      mb="0"
+                      ms="1"
+                      fontWeight="normal"
+                    >
+                      Remember me
+                    </FormLabel>
+                  </FormControl>
+                  {error && <Text color="red">{error}</Text>}
+                  <Button
+                    fontSize="18px"
+                    type="submit"
+                    bg="purple.300"
+                    w="100%"
+                    h="45"
+                    mb="20px"
+                    color="white"
+                    mt="20px"
+                    _hover={{
+                      bg: "purple.200",
+                    }}
+                    _active={{
+                      bg: "purple.400",
+                    }}
+                  >
+                    SIGN IN
+                  </Button>
+                </form>
               </FormControl>
+              <Box></Box>
               <Flex
                 flexDirection="column"
                 justifyContent="center"
@@ -170,7 +215,13 @@ function SignIn() {
               >
                 <Text color={textColor} fontWeight="medium">
                   Don't have an account?
-                  <Link color={titleColor} as="span" ms="5px" fontWeight="bold" onClick={handleSignupClick}>
+                  <Link
+                    color={titleColor}
+                    as="span"
+                    ms="5px"
+                    fontWeight="bold"
+                    onClick={handleSignupClick}
+                  >
                     Sign Up
                   </Link>
                 </Text>
@@ -203,9 +254,7 @@ function SignIn() {
                   onClick={handleHomeClick}
                   marginBottom={"40px"}
                 />
-                <Image
-                  src={signInImage}
-                />
+                <Image src={signInImage} />
               </VStack>
             </Box>
           </Box>

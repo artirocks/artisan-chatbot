@@ -1,77 +1,56 @@
-from fastapi import FastAPI, HTTPException, Depends
-from pydantic import BaseModel
-from typing import Optional
-import uvicorn
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, EmailStr
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-
-# Secret key to encode and decode JWT tokens
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 router = APIRouter()
 
-# Password hashing setup
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# User data and JWT token models
-class User(BaseModel):
-    username: str
-    email: str
-
-class UserInDB(User):
-    hashed_password: str
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-class TokenData(BaseModel):
-    username: str
-
-# Dummy user database
+# Mock database
 fake_users_db = {
-    "testuser": {
-        "username": "testuser",
-        "email": "testuser@example.com",
-        "hashed_password": pwd_context.hash("password123")
+    "k.artiism06@gmail.com": {
+        "username": "Arti",
+        "email": "k.artiism06@gmail.com",
+        "hashed_password": pwd_context.hash("password123"),
     }
 }
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
+class User(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+# Dummy token for example
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+def authenticate_user(email: str, password: str):
+    user = fake_users_db.get(email)
+    if not user or not verify_password(password, user["hashed_password"]):
+        return False
+    return user
 
-def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=15)) -> str:
-    to_encode = data.copy()
-    expire = datetime.utcnow() + expires_delta
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
+@router.post("/token")
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+    if not user:
+        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    return {"access_token": user["email"], "token_type": "bearer"}
 
-@router.post("/token", response_model=Token)
-async def login(form_data: User):
-    user = fake_users_db.get(form_data.username)
-    if not user or not verify_password(form_data.password, user["hashed_password"]):
-        raise HTTPException(status_code=401, detail="Incorrect username or password")
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": form_data.username}, expires_delta=access_token_expires
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+@router.post("/signup")
+async def signup(user: User):
+    print("Here")
+    if user.email in fake_users_db:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Store the user in the database with hashed password
+    fake_users_db[user.email] = {
+        "username": user.username,
+        "email": user.email,
+        "hashed_password": pwd_context.hash(user.password),
+    }
+    return {"message": "User registered successfully"}
 
-@router.get("/users/me", response_model=User)
-async def read_users_me(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-        token_data = TokenData(username=username)
-    except JWTError:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-    return fake_users_db.get(token_data.username)
