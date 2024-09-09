@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from apis.geminiai import router as bot_router
 from apis.authentication import router as authentication_router
 from apis.chatbotserver import router as bot_server_router
 

@@ -1,61 +1,45 @@
-from typing import List
+import json
+from typing import List, Dict
 from fastapi import FastAPI, HTTPException, Depends, APIRouter
 from pydantic import BaseModel
-from typing import List, Dict
-
 from datetime import datetime
-# import geminiai 
+import os
+
+from models.models import Message, PromptRequest, ModelResponse, SaveRequest
+from gen_ai_models.geminiai import generate_text
+
 router = APIRouter()
 
-# In-memory store for demonstration purposes
-message_store: Dict[str, List['Message']] = {}
+# Path to the JSON file where messages will be stored
+MESSAGE_STORE_FILE = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\db\\message_store.json"
 
-class Message(BaseModel):
-    id: int
-    text: str
-    isBot: bool
-    isDeleted: bool = False
+# Function to load messages from the JSON file
+def load_message_store() -> Dict[str, List['Message']]:
+    if os.path.exists(MESSAGE_STORE_FILE):
+        with open(MESSAGE_STORE_FILE, "r") as file:
+            return json.load(file)
+    return {}
 
-class PromptRequest(BaseModel):
-    prompt: str
-    document_path: str = None
+# Function to save messages to the JSON file
+def save_message_store(store: Dict[str, List['Message']]):
+    with open(MESSAGE_STORE_FILE, "w") as file:
+        json.dump(store, file, indent=4, default=str)  # 'default=str' to handle datetime serialization
 
-class ModelResponse(BaseModel):
-    generated_text: str
-
-class SaveRequest(BaseModel):
-    user_id: str  # user_id to track messages per user
-    user_message: Message
-    bot_message: Message
+# Initialize message store by loading the existing data
+message_store: Dict[str, List['Message']] = load_message_store()
 
 @router.post("/generate/", response_model=ModelResponse)
-async def generate_text(request: PromptRequest):
+async def get_response(request: PromptRequest):
     try:
-        # Check if a document path is provided
-        document_content = ""
-        if request.document_path:
-            try:
-                # Read the document from the file
-                document_content = read_document_from_file(request.document_path)
-            except FileNotFoundError as e:
-                raise HTTPException(status_code=404, detail=str(e))
-        
-        # Combine document content (if any) with the prompt
-        if document_content:
-            full_prompt = f"Using the following information:\n{document_content}\nAnswer the following:\n{request.prompt}"
-        else:
-            full_prompt = request.prompt
-
         # Use the generative model to generate content based on the combined prompt and document
-        # response = model.generate_content(full_prompt)
+        response = await generate_text(request)
 
         # Return the generated text
-        return {"generated_text": "Demo Response"}
+        return {"generated_text": response}
 
     except Exception as e:
         # Handle errors
         raise HTTPException(status_code=500, detail=f"Model generation failed: {str(e)}")
-
 
 
 @router.post("/save/")
@@ -65,8 +49,11 @@ async def save_messages(save_request: SaveRequest):
         message_store[save_request.user_id] = []  # Create a new list if user_id is new
 
     # Append both user and bot messages to the list for that user
-    message_store[save_request.user_id].append(save_request.user_message)
-    message_store[save_request.user_id].append(save_request.bot_message)
+    message_store[save_request.user_id].append(save_request.user_message.dict())
+    message_store[save_request.user_id].append(save_request.bot_message.dict())
+
+    # Save the updated message store to the JSON file
+    save_message_store(message_store)
     
     return {"message": "Messages saved successfully"}
 
@@ -80,4 +67,3 @@ def read_document_from_file(file_path: str) -> str:
     with open(file_path, 'r') as file:
         return file.read()
 
-# To run the app, use: uvicorn filename:app --reload

@@ -146,7 +146,9 @@ const AvaChatbot: React.FC = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ userMessage: updatedMessage, botMessage }),
+      body: JSON.stringify({ user_id: token,
+        user_message: updatedMessage,
+        bot_message: botMessage }),
     });
 
     setMessages((prevMessages) => [...prevMessages, botMessage]);
