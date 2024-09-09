@@ -1,3 +1,99 @@
+# Chat Widget Project
+
+## Overview
+
+This project involves developing a chat widget that allows users to interact with a chatbot. The widget supports various functionalities, including sending and receiving messages, editing and deleting messages. Additionally, the project includes authentication for secure access to the chat service.
+
+## Key Features
+
+### 1. Authentication
+
+- **Secure Access:** Users must authenticate before accessing the chat widget. This ensures that only authorized individuals can send and receive messages. Used OAuth2.
+
+### 2. Chatbot Messaging Service
+
+- **Send a Message:**
+  - Users can send messages to the chatbot through the widget.
+  - After sending a message, the chatbot generates and sends back a relevant response.
+
+- **Receive a Response:**
+  - The chatbot processes incoming messages and provides appropriate responses based on the content of the messages.
+
+- **Delete a Message:**
+  - Users have the ability to delete any message they have sent.
+  - Once deleted, the message is removed from the chat history and underlying storage.
+
+- **Edit a Message:**
+  - Users can edit messages they have previously sent.
+  - Edited messages are updated in the chat history, ensuring that the most recent content is displayed.
+
+## Setup and Installation
+
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/your-username/chat-widget.git
+
+
+## Technology Used
+
+- **Python:** To build the API for the chat service.
+- **GemeiniAI:** To handle message responses and act as the chatbot.
+- **FastAPI:** For creating the API endpoints and managing asynchronous communication.
+- **React:** For building the user interface of the chat widget.
+- **Chakra UI:** For styling the chat widget and ensuring a responsive, modern design.
+- **OAuth2:** For implementing secure authentication and authorization.
+
+# Project Structure
+ARTISAN-CHATBOT/
+│
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── apis
+│   │   │   ├── __init__.py
+|   |   |   ├── authentication.py
+│   │   │   └── chatbotserver.py
+│   │   ├── gen_ai_models
+|   |   |   |── gemeiniai.py
+|   |   |   └── docs
+|   |   |       └──artisan_background.txt
+│   │   └── models
+|   |       └──models.py
+|   |── db
+│   │   ├── message_store.json
+│   │   └── users_db.json
+│   ├── requirements.txt
+|   |── .gitignore
+│   └── README.md   
+│
+├── ui/artisan
+│   ├── public/
+│   │   ├── index.html
+│   │   └── favicon.ico
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── AvaChatbot.tsx
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── HomePage.js
+│   │   │   ├── Signin.js
+│   │   │   └── Signup.js
+│   │   ├── pages/
+│   │   │   └── HomePage.js
+│   │   ├── themes
+│   │   │   └── App.css
+│   │   |── assests
+│   │   |   └── img
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   └── index.tsx
+│   ├── package.json
+│   └── README.md
+│
+├── .gitignore
+└── README.md
+
 # Project Setup
 
 ## Backend
@@ -20,6 +116,7 @@ Windows
 ### Run APIs
 `python -m uvicorn main:app`
 
+NOTE: Gemini API_KEY is shared via mail.
 
 ## UI
 

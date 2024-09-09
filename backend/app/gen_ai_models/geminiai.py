@@ -14,7 +14,7 @@ class PromptRequest(BaseModel):
 class ModelResponse(BaseModel):
     generated_text: str
 
-document_path: str = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\docs\\artisan_background.txt"
+document_path: str = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\app\\gen_ai_models\\docs\\artisan_background.txt"
 
 # Initialize the generative model
 model = genai.GenerativeModel("gemini-1.5-flash")
@@ -39,12 +39,10 @@ async def generate_text(request: PromptRequest):
         
         # Combine document content (if any) with the prompt
         if document_content:
-            print("Documrnt content present")
             full_prompt = f"Using the following information:\n{document_content}\nAnswer the following:\n{request.prompt}"
         else:
             full_prompt = request.prompt
-        print(full_prompt)
-
+        
         # Use the generative model to generate content based on the combined prompt and document
         response = model.generate_content(full_prompt)
 
