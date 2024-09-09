@@ -47,6 +47,28 @@ const AvaChatbot: React.FC = () => {
 
   const messageContainerRef = useRef<HTMLDivElement>();
 
+  const token = localStorage.getItem("token");
+
+  // Fetch message history on component mount
+  useEffect(() => {
+    const fetchHistory = async () => {
+      if (token) {
+        const response = await fetch(
+          `http://localhost:8000/bot/history/${token}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const history = await response.json();
+        setMessages(history);
+      }
+    };
+    fetchHistory();
+  }, [token]);
+
   const handleSendMessage = async () => {
     const userMessage: Message = {
       id: Date.now(),
@@ -60,6 +82,7 @@ const AvaChatbot: React.FC = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ prompt: inputValue }),
     });
@@ -68,13 +91,28 @@ const AvaChatbot: React.FC = () => {
     const botMessage: Message = {
       id: Date.now() + 1,
       text: data.generated_text,
-      user: "Jane",
+      user: "Ava",
       isBot: true,
     };
+
+    // Save both user message and bot response to API
+    await fetch("http://localhost:8000/bot/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        user_id: token,
+        user_message: userMessage,
+        bot_message: botMessage,
+      }),
+    });
 
     setMessages((prevMessages) => [...prevMessages, botMessage]);
     setInputValue("");
   };
+
   const handleEditMessage = async (id: number, newText: string) => {
     const updatedMessage: Message = {
       id: id,
@@ -88,6 +126,7 @@ const AvaChatbot: React.FC = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ prompt: newText }),
     });
@@ -99,6 +138,16 @@ const AvaChatbot: React.FC = () => {
       user: "Ava",
       isBot: true,
     };
+
+    // Save edited user message and bot response to API
+    await fetch("http://localhost:8000/bot/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userMessage: updatedMessage, botMessage }),
+    });
 
     setMessages((prevMessages) => [...prevMessages, botMessage]);
 
