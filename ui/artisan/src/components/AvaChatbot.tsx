@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Flex,
-  Text,
   Button,
   Input,
   Avatar,
@@ -10,16 +9,29 @@ import {
   Editable,
   EditableInput,
   EditablePreview,
+  Text,
+  VStack,
+  Divider,
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
 
-const AvaChatbot = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+type Message = {
+  id: number;
+  text: string;
+  user: string;
+  isBot: boolean;
+  isDeleted?: boolean;
+};
 
-  // Function to handle sending message and getting response
+const AvaChatbot: React.FC = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(true); // State to handle the chat window visibility
+
+  const messageContainerRef = useRef<HTMLDivElement | null>(null);
+
   const handleSendMessage = async () => {
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now(),
       text: inputValue,
       user: "Jane",
@@ -27,32 +39,27 @@ const AvaChatbot = () => {
     };
     setMessages([...messages, userMessage]);
 
-    // Using fetch to call an API
     const response = await fetch("http://localhost:8000/bot/generate", {
-      method: "POST", // Change method to POST
+      method: "POST",
       headers: {
-        "Content-Type": "application/json", // Set content type to JSON
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ prompt: inputValue }), // Include body with JSON payload
+      body: JSON.stringify({ prompt: inputValue }),
     });
     const data = await response.json();
-    // data.generated_text;
 
-    // const data = await response.json(); // Parse response as JSON
-
-    const botMessage = {
+    const botMessage: Message = {
       id: Date.now() + 1,
-      text: data.generated_text, // Get message from API response
+      text: data.generated_text,
       user: "Ava",
       isBot: true,
     };
 
     setMessages((prevMessages) => [...prevMessages, botMessage]);
-    setInputValue(""); // Clear input field
+    setInputValue("");
   };
 
-  // Function to edit a message
-  const handleEditMessage = (id, newText) => {
+  const handleEditMessage = (id: number, newText: string) => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
         msg.id === id ? { ...msg, text: newText } : msg
@@ -60,7 +67,7 @@ const AvaChatbot = () => {
     );
   };
 
-  const handleDeleteMessage = (id) => {
+  const handleDeleteMessage = (id: number) => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
         msg.id === id
@@ -70,78 +77,133 @@ const AvaChatbot = () => {
     );
   };
 
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop =
+        messageContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  if (!isChatOpen) return null;
+
   return (
-    <Box width="400px" p="4" bg="gray.50" borderRadius="lg" boxShadow="md">
-      <Flex direction="column" mb="4">
-        {messages.map((message) => (
-          <Flex
-            key={message.id}
-            alignItems="center"
-            justifyContent={message.isBot ? "flex-start" : "flex-end"}
-            mb="2"
-          >
-            {message.isBot && <Avatar size="sm" name="Ava" src="/avatar.png" />}
-            <Box
-              bg={message.isBot ? "gray.100" : "purple.100"}
-              p="3"
-              borderRadius="lg"
-              maxWidth="80%"
-              position="relative"
+    <Box justifyContent={"left"}>
+      <Box
+        width="400px"
+        height="600px"
+        p="4"
+        bg="gray.50"
+        borderRadius="lg"
+        boxShadow="md"
+      >
+        <Box>
+          <IconButton
+            ml={320}
+            size="sm"
+            icon={<CloseIcon />}
+            onClick={() => setIsChatOpen(false)}
+            variant="ghost"
+            aria-label="Close chat"
+          />
+          <VStack alignItems="center">
+            <Avatar
+              size="sm"
+              name="Ava"
+              src="https://www.artisan.co/assets/ava.svg"
+            />
+            <Text ml="2" fontWeight="bold">
+              I am Ava, How can I help you?
+            </Text>
+          </VStack>
+        </Box>
+        <Divider mt={7} />
+        <Box
+          ref={messageContainerRef}
+          overflowY="auto"
+          overflowX="hidden"
+          height="400px"
+          mb="4"
+          p="2"
+          bg="white"
+          borderRadius="md"
+          boxShadow="sm"
+          wordWrap="break-word"
+          whiteSpace="pre-wrap"
+        >
+          {messages.map((message) => (
+            <Flex
+              key={message.id}
+              alignItems="center"
+              justifyContent={message.isBot ? "flex-start" : "flex-end"}
+              mb="2"
             >
-              <Editable
-                value={message.text} // Use value instead of defaultValue to dynamically render the updated message
-                isDisabled={message.isDeleted} // Allow editing for user messages only if they are not deleted
-                onSubmit={(newText) => handleEditMessage(message.id, newText)}
-              >
-                <EditablePreview />
-                <EditableInput />
-              </Editable>
-
-              {!message.isBot && !message.isDeleted && (
-                <Flex
-                  position="absolute"
-                  top="0"
-                  right="-30px"
-                  direction="column"
-                >
-                  {/* Edit Icon */}
-                  <IconButton
-                    size="sm"
-                    icon={<EditIcon />}
-                    onClick={
-                      () => {} /* Chakra UI's Editable handles edit mode internally */
-                    }
-                    variant="ghost"
-                    colorScheme="blue"
-                  />
-
-                  {/* Delete Icon */}
-                  <IconButton
-                    size="sm"
-                    icon={<DeleteIcon />}
-                    onClick={() => handleDeleteMessage(message.id)}
-                    variant="ghost"
-                    colorScheme="red"
-                    mt="2"
-                  />
-                </Flex>
+              {message.isBot && (
+                <Avatar
+                  size="sm"
+                  name="Ava"
+                  src="https://www.artisan.co/assets/ava.svg"
+                />
               )}
-            </Box>
-          </Flex>
-        ))}
-      </Flex>
+              <Box
+                bg={message.isBot ? "gray.100" : "purple.100"}
+                p="3"
+                borderRadius="lg"
+                maxWidth="80%"
+                position="relative"
+                wordWrap="break-word"
+                whiteSpace="pre-wrap"
+              >
+                <Editable
+                  value={message.text}
+                  isDisabled={message.isDeleted}
+                  onSubmit={(newText) => handleEditMessage(message.id, newText)}
+                >
+                  <EditablePreview />
+                  <EditableInput />
+                </Editable>
 
-      <Flex mt="4">
-        <Input
-          placeholder="Type a message..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          mr="2"
-        />
-        <Button onClick={handleSendMessage} colorScheme="purple">
-          Send
-        </Button>
-      </Flex>
+                {!message.isBot && !message.isDeleted && (
+                  <Flex
+                    position="absolute"
+                    top="0"
+                    right="-30px"
+                    direction="column"
+                  >
+                    <IconButton
+                      size="sm"
+                      icon={<EditIcon />}
+                      variant="ghost"
+                      colorScheme="blue"
+                      aria-label="Edit message"
+                    />
+
+                    <IconButton
+                      size="sm"
+                      icon={<DeleteIcon />}
+                      onClick={() => handleDeleteMessage(message.id)}
+                      variant="ghost"
+                      colorScheme="red"
+                      mt="2"
+                      aria-label="Delete message"
+                    />
+                  </Flex>
+                )}
+              </Box>
+            </Flex>
+          ))}
+        </Box>
+        <Flex mt="4">
+          <Input
+            placeholder="Type a message..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            mr="2"
+          />
+          <Button onClick={handleSendMessage} colorScheme="purple">
+            Send
+          </Button>
+        </Flex>
+      </Box>
     </Box>
   );
 };
