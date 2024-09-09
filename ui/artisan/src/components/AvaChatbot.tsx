@@ -14,6 +14,8 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, CloseIcon } from "@chakra-ui/icons";
+import { TfiArrowsCorner } from "react-icons/tfi";
+import { CgWebsite } from "react-icons/cg";
 
 type Message = {
   id: number;
@@ -87,10 +89,10 @@ const AvaChatbot: React.FC = () => {
   if (!isChatOpen) return null;
 
   return (
-    <Box justifyContent={"left"}>
+    <Box position="fixed" bottom="20px" right="20px">
       <Box
         width="400px"
-        height="600px"
+        height="620px"
         p="4"
         bg="gray.50"
         borderRadius="lg"
@@ -98,13 +100,27 @@ const AvaChatbot: React.FC = () => {
       >
         <Box>
           <IconButton
-            ml={320}
+            size="sm"
+            icon={<TfiArrowsCorner />}
+            onClick={() => setIsChatOpen(false)}
+            variant="ghost"
+            aria-label="Expand chat"
+          />
+          <IconButton
+            size="sm"
+            icon={<CgWebsite />}
+            onClick={() => setIsChatOpen(false)}
+            variant="ghost"
+            aria-label="Open dashboard"
+          />
+          {/* <IconButton
             size="sm"
             icon={<CloseIcon />}
             onClick={() => setIsChatOpen(false)}
             variant="ghost"
             aria-label="Close chat"
-          />
+          /> */}
+
           <VStack alignItems="center">
             <Avatar
               size="sm"

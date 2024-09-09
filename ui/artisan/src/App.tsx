@@ -25,7 +25,6 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-          <Route path="/chats" element={<PrivateRoute><AvaChatbot /></PrivateRoute>} />
         </Routes>
       </Router>
       </ChakraBaseProvider>

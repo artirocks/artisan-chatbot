@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Flex,
@@ -28,9 +28,11 @@ import {
   SearchIcon,
   StarIcon,
   ViewIcon,
+  ChatIcon,
+  CloseIcon,
 } from "@chakra-ui/icons";
 import { CartIcon, DocumentIcon } from "./Icons/Icons.tsx";
-
+import AvaChatbot from "./AvaChatbot.tsx";
 export default function Dashboard() {
   const mainText = useColorModeValue("gray.700", "gray.200");
   const secondaryText = useColorModeValue("gray.400", "gray.200");
@@ -39,11 +41,16 @@ export default function Dashboard() {
   const inputBg = useColorModeValue("white", "gray.800");
   const navbarIcon = useColorModeValue("gray.500", "gray.200");
   const searchIcon = useColorModeValue("gray.700", "gray.200");
+  const [isChatbotOpen, setChatbotOpen] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
     navigate("/");
+  };
+
+  const toggleChatbot = () => {
+    setChatbotOpen(!isChatbotOpen);
   };
 
   return (
@@ -226,96 +233,128 @@ export default function Dashboard() {
               </Flex>
             </Box>
           </Flex>
-          <Grid
-            templateColumns={{ sm: "1fr", md: "repeat(3, 1fr)" }}
-            gap={6}
-            mt={10}
-            mx="auto"
-            maxW="80%"
-            px={4}
-            height={"350px"}
-          >
-            <Box
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={6}
-              bg="white"
-              boxShadow="lg"
-              textAlign="center"
-            >
-              <Flex direction="column" align="center" mb={4}>
-                <Icon
-                  as={StarIcon}
-                  boxSize={12}
-                  color="green.500"
-                  height={"30px"}
-                  mb={8}
-                />
-                <Text fontSize="xl" fontWeight="bold" mb={2}>
-                  Consolidate Your Fragmented Stack
-                </Text>
-                <Text fontSize="md" color="gray.600">
-                  We consolidate every tool your team needs for outbound with
-                  best-in-class products – from B2B Data to Email Warmup.
-                </Text>
-              </Flex>
-            </Box>
 
-            <Box
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={6}
-              bg="white"
-              boxShadow="lg"
-              textAlign="center"
-            >
-              <Flex direction="column" align="center" mb={4}>
-                <Icon
-                  as={ViewIcon}
-                  boxSize={12}
-                  color="blue.500"
-                  height={"30px"}
-                  mb={8}
-                />
-                <Text fontSize="xl" fontWeight="bold" mb={2}>
-                  Free Reps to Focus on High-Leverage Work
-                </Text>
-                <Text fontSize="md" color="gray.600">
-                  Ava automates over 80% of your BDRs' outbound workflow. This
-                  frees up your reps to focus on high-leverage activities.
-                </Text>
-              </Flex>
-            </Box>
+          {!isChatbotOpen && (
+            <>
+              <Grid
+                templateColumns={{ sm: "1fr", md: "repeat(3, 1fr)" }}
+                gap={6}
+                mt={10}
+                mx="auto"
+                maxW="80%"
+                px={4}
+                height={"350px"}
+              >
+                <Box
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  p={6}
+                  bg="white"
+                  boxShadow="lg"
+                  textAlign="center"
+                >
+                  <Flex direction="column" align="center" mb={4}>
+                    <Icon
+                      as={StarIcon}
+                      boxSize={12}
+                      color="green.500"
+                      height={"30px"}
+                      mb={8}
+                    />
+                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                      Consolidate Your Fragmented Stack
+                    </Text>
+                    <Text fontSize="md" color="gray.600">
+                      We consolidate every tool your team needs for outbound
+                      with best-in-class products – from B2B Data to Email
+                      Warmup.
+                    </Text>
+                  </Flex>
+                </Box>
 
-            <Box
-              borderWidth="1px"
-              borderRadius="lg"
-              overflow="hidden"
-              p={6}
-              bg="white"
-              boxShadow="lg"
-              textAlign="center"
-            >
-              <Flex direction="column" align="center" mb={4}>
-                <Icon
-                  as={RepeatClockIcon}
-                  boxSize={12}
-                  color="yellow.500"
-                  height={"30px"}
-                  mb={8}
-                />
-                <Text fontSize="xl" fontWeight="bold" mb={2}>
-                  Automate Your Best Manual Strategies
-                </Text>
-                <Text fontSize="md" color="gray.600">
-                  We can build custom Playbooks that replicate the research &
-                  email writing workflows of your top performers.
-                </Text>
-              </Flex>
+                <Box
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  p={6}
+                  bg="white"
+                  boxShadow="lg"
+                  textAlign="center"
+                >
+                  <Flex direction="column" align="center" mb={4}>
+                    <Icon
+                      as={ViewIcon}
+                      boxSize={12}
+                      color="blue.500"
+                      height={"30px"}
+                      mb={8}
+                    />
+                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                      Free Reps to Focus on High-Leverage Work
+                    </Text>
+                    <Text fontSize="md" color="gray.600">
+                      Ava automates over 80% of your BDRs' outbound workflow.
+                      This frees up your reps to focus on high-leverage
+                      activities.
+                    </Text>
+                  </Flex>
+                </Box>
+
+                <Box
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  p={6}
+                  bg="white"
+                  boxShadow="lg"
+                  textAlign="center"
+                >
+                  <Flex direction="column" align="center" mb={4}>
+                    <Icon
+                      as={RepeatClockIcon}
+                      boxSize={12}
+                      color="yellow.500"
+                      height={"30px"}
+                      mb={8}
+                    />
+                    <Text fontSize="xl" fontWeight="bold" mb={2}>
+                      Automate Your Best Manual Strategies
+                    </Text>
+                    <Text fontSize="md" color="gray.600">
+                      We can build custom Playbooks that replicate the research
+                      & email writing workflows of your top performers.
+                    </Text>
+                  </Flex>
+                </Box>
+              </Grid>
+              <IconButton
+                aria-label="Open chatbot"
+                icon={<ChatIcon />}
+                onClick={toggleChatbot}
+                position="fixed"
+                bottom="20px"
+                right="20px"
+                borderRadius="full"
+                colorScheme="purple"
+              />
+            </>
+          )}
+          {isChatbotOpen && (
+            <Box flex="1" p="8" position="relative">
+              <AvaChatbot />
+              <IconButton
+                aria-label="Close chatbot"
+                icon={<CloseIcon />}
+                onClick={toggleChatbot}
+                position="absolute"
+                mt={0}
+                right="2px"
+                borderRadius="full"
+                colorScheme="red"
+              />
             </Box>
-          </Grid>
+          )}
         </Box>
       </Flex>
     </>
