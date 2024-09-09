@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 import os
 from pydantic import BaseModel
 
-genai.configure(api_key="AIzaSyC8tsF0mAJiJbi2C_Et90FEB6J1QZwm-bs")
+genai.configure(api_key="")
 
 router = APIRouter()
 
@@ -39,7 +39,7 @@ async def generate_text(request: PromptRequest):
         
         # Combine document content (if any) with the prompt
         if document_content:
-            full_prompt = f"Using the following information:\n{document_content}\nAnswer the following:\n{request.prompt}"
+            full_prompt = f"Using the following information:\n{document_content}\nAnswer the following:\n{request.prompt} in max 20 words. Keep it concise."
         else:
             full_prompt = request.prompt
         

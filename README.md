@@ -27,11 +27,13 @@ This project involves developing a chat widget that allows users to interact wit
   - Users can edit messages they have previously sent.
   - Edited messages are updated in the chat history, ensuring that the most recent content is displayed.
 
-## Setup and Installation
+## Snaps
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/your-username/chat-widget.git
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="https://example.com/image1.png" alt="Image 1" style="width: 300px; margin-right: 10px;">
+  <img src="https://example.com/image2.png" alt="Image 2" style="width: 300px; margin-right: 10px;">
+  <img src="https://example.com/image3.png" alt="Image 3" style="width: 300px;">
+</div>
 
 
 ## Technology Used
@@ -44,6 +46,7 @@ This project involves developing a chat widget that allows users to interact wit
 - **OAuth2:** For implementing secure authentication and authorization.
 
 # Project Structure
+```
 ARTISAN-CHATBOT/
 │
 ├── backend/
@@ -92,7 +95,11 @@ ARTISAN-CHATBOT/
 │   └── README.md
 │
 ├── .gitignore
-└── README.md
+|── README.md
+│
+|── snaps 
+    └── Product Images
+```
 
 # Project Setup
 
