@@ -2,19 +2,26 @@ import google.generativeai as genai
 from fastapi import APIRouter, HTTPException
 import os
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
-genai.configure(api_key="")
+load_dotenv()
+api_key = os.getenv("GOOGLE_API_KEY")
+
+if not api_key:
+    raise ValueError("API key not found in environment variables.")
+
+genai.configure(api_key=api_key)
 
 router = APIRouter()
 
 class PromptRequest(BaseModel):
     prompt: str
-    # document_path: str = "..\\docs\\background.txt"  # Path to the document on disk
 
 class ModelResponse(BaseModel):
     generated_text: str
 
-document_path: str = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\app\\gen_ai_models\\docs\\artisan_background.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+document_path: str = os.path.join(BASE_DIR, "docs", "artisan_background.txt") 
 
 # Initialize the generative model
 model = genai.GenerativeModel("gemini-1.5-flash")

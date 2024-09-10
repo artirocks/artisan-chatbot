@@ -28,11 +28,12 @@ function SignIn() {
   const navigate = useNavigate();
   const titleColor = useColorModeValue("purple.300", "purple.200");
   const textColor = useColorModeValue("gray.400", "white");
+  const apiUrl = process.env.REACT_APP_AUTHENTICATION_API_BASE_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/authenticate/token", {
+      const response = await fetch(`${apiUrl}/authenticate/token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -245,7 +246,6 @@ function SignIn() {
               borderBottomRightRadius="20px"
               marginTop={"80px"}
             >
-              {/* bgImage={signInImage} */}
               <VStack>
                 <Image
                   src="https://www.artisan.co/_next/image?url=%2Fassets%2Fartisan-primary-logo.webp&w=256&q=75"

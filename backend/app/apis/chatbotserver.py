@@ -10,8 +10,8 @@ from gen_ai_models.geminiai import generate_text
 
 router = APIRouter()
 
-# Path to the JSON file where messages will be stored
-MESSAGE_STORE_FILE = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\db\\message_store.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MESSAGE_STORE_FILE = os.path.join(BASE_DIR, "..//db", "message_store.json")
 
 # Function to load messages from the JSON file
 def load_message_store() -> Dict[str, List['Message']]:

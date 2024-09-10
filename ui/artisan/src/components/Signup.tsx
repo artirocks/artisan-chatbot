@@ -14,17 +14,17 @@ import {
 function SignUp() {
   const textColor = useColorModeValue("gray.700", "white");
   const bgColor = useColorModeValue("white", "gray.700");
-  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const apiUrl = process.env.REACT_APP_AUTHENTICATION_API_BASE_URL;
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://127.0.0.1:8000/authenticate/signup", {
+      const response = await fetch(`${apiUrl}/authenticate/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,13 @@ function SignUp() {
         <Text mt="1.5rem" fontSize="4xl" color="white" fontWeight="bold">
           Welcome!
         </Text>
-        <Text fontSize="md" color="white" fontWeight="normal" mt="10px" mb="26px">
+        <Text
+          fontSize="md"
+          color="white"
+          fontWeight="normal"
+          mt="10px"
+          mb="26px"
+        >
           Use these awesome forms to create a new account for your project.
         </Text>
       </Flex>
@@ -95,7 +101,13 @@ function SignUp() {
           bg={bgColor}
           boxShadow="0 20px 27px 0 rgb(0 0 0 / 5%)"
         >
-          <Text fontSize="xl" color={textColor} fontWeight="bold" textAlign="center" mb="22px">
+          <Text
+            fontSize="xl"
+            color={textColor}
+            fontWeight="bold"
+            textAlign="center"
+            mb="22px"
+          >
             Register
           </Text>
           <form onSubmit={handleSignUp}>

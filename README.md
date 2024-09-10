@@ -27,13 +27,30 @@ This project involves developing a chat widget that allows users to interact wit
   - Users can edit messages they have previously sent.
   - Edited messages are updated in the chat history, ensuring that the most recent content is displayed.
 
+## Demo Video
+[Demo Video Link](https://drive.google.com/file/d/1zw95kjAP4jHNfxj7VxR33qjt07IAUpHX/view?usp=sharing)
+[![Watch the video](https://github.com/artirocks/artisan-chatbot/blob/main/snaps/1%20HomePage.png)](https://drive.google.com/file/d/1zw95kjAP4jHNfxj7VxR33qjt07IAUpHX/view?usp=sharing)
+
 ## Snaps
 
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="https://example.com/image1.png" alt="Image 1" style="width: 300px; margin-right: 10px;">
-  <img src="https://example.com/image2.png" alt="Image 2" style="width: 300px; margin-right: 10px;">
-  <img src="https://example.com/image3.png" alt="Image 3" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/1%20HomePage.png" alt="Home Page" style="width: 300px; margin-right: 10px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/2%20Sign%20up%20page.png" alt="Sign Up Page" style="width: 300px; margin-right: 10px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/3%20User%20Signed%20Up.png" alt="User Signed Up" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/4%20User%20Logged%20In.png" alt="User Logged In" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/3%20User%20Signed%20Up.png" alt="Dashboard visible to Logged in user" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/6%20Chatbot%20Interface.png" alt="Chatbot Interface" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/7%20Chatbot%20answers%20query.png" alt="Chatbot answer Query" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/8%20Chatbot%20answer%20query%202.png" alt="Chatbot answers Query 2" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/9%20Chatbot%20answer%20query%203.png" alt="Chatbot Answer Query 3" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/10%20Edit%20and%20Delete%20Options.png" alt="Edit and Delete Option" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/11%20Deleted%20query%202.png" alt="Delete Query 2" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/12%20Edited%20query%203.png" alt="Edited Query 3" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/13%20Response%20of%20edited%20query.png" alt="Response of edited query" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/14%20Closed%20chatbot.png" alt="Closed Chatbot" style="width: 300px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/15%20Fetch%20persisted%20Chat%20history.png" alt="Persisted Chat History" style="width: 300px;">
 </div>
+
 
 
 ## Technology Used

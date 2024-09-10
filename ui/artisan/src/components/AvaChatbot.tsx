@@ -44,24 +44,21 @@ const AvaChatbot: React.FC = () => {
   const [editingMessage, setEditingMessage] = useState<number | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState<string>("");
-
   const messageContainerRef = useRef<HTMLDivElement>();
 
+  const apiUrl = process.env.REACT_APP_BOT_API_BASE_URL;
   const token = localStorage.getItem("token");
 
   // Fetch message history on component mount
   useEffect(() => {
     const fetchHistory = async () => {
       if (token) {
-        const response = await fetch(
-          `http://localhost:8000/bot/history/${token}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiUrl}/bot/history/${token}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const history = await response.json();
         setMessages(history);
       }
@@ -78,7 +75,7 @@ const AvaChatbot: React.FC = () => {
     };
     setMessages([...messages, userMessage]);
 
-    const response = await fetch("http://localhost:8000/bot/generate", {
+    const response = await fetch(`${apiUrl}/bot/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +93,7 @@ const AvaChatbot: React.FC = () => {
     };
 
     // Save both user message and bot response to API
-    await fetch("http://localhost:8000/bot/save", {
+    await fetch(`${apiUrl}/bot/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +119,7 @@ const AvaChatbot: React.FC = () => {
     };
     setMessages((prevMessages) => [...prevMessages, updatedMessage]);
 
-    const response = await fetch("http://localhost:8000/bot/generate", {
+    const response = await fetch(`${apiUrl}/bot/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,15 +137,17 @@ const AvaChatbot: React.FC = () => {
     };
 
     // Save edited user message and bot response to API
-    await fetch("http://localhost:8000/bot/save", {
+    await fetch(`${apiUrl}/bot/save`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ user_id: token,
+      body: JSON.stringify({
+        user_id: token,
         user_message: updatedMessage,
-        bot_message: botMessage }),
+        bot_message: botMessage,
+      }),
     });
 
     setMessages((prevMessages) => [...prevMessages, botMessage]);

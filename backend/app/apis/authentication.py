@@ -11,8 +11,9 @@ router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# File path for the JSON database
-DB_FILE = "C:\\Users\\karti\\OneDrive\\Desktop\\projects\\artisan-chatbot\\backend\\db\\users_db.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, "..//db", "users_db.json")
+
 
 # Function to load users from the JSON file
 def load_users_db():
