@@ -27,6 +27,20 @@ This project involves developing a chat widget that allows users to interact wit
   - Users can edit messages they have previously sent.
   - Edited messages are updated in the chat history, ensuring that the most recent content is displayed.
 
+## Technology Used
+
+- **Python:** To build the API for the chat service.
+- **GemeiniAI:** To handle message responses and act as the chatbot.
+- **FastAPI:** For creating the API endpoints and managing asynchronous communication.
+- **React:** For building the user interface of the chat widget.
+- **Chakra UI:** For styling the chat widget and ensuring a responsive, modern design.
+- **OAuth2:** For implementing secure authentication and authorization.
+
+## High Level Flow
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/0%20Hig%20Level%20Workflow%20.png" alt="High level Architecture" style="width: 600px; margin-right: 5px;">
+</div>
+
 ## Demo Video
 [Demo Video Link](https://drive.google.com/file/d/1zw95kjAP4jHNfxj7VxR33qjt07IAUpHX/view?usp=sharing)
 [![Watch the video](https://github.com/artirocks/artisan-chatbot/blob/main/snaps/1%20HomePage.png)](https://drive.google.com/file/d/1zw95kjAP4jHNfxj7VxR33qjt07IAUpHX/view?usp=sharing)
@@ -34,8 +48,8 @@ This project involves developing a chat widget that allows users to interact wit
 ## Snaps
 
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/1%20HomePage.png" alt="Home Page" style="width: 300px; margin-right: 10px;">
-  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/2%20Sign%20up%20page.png" alt="Sign Up Page" style="width: 300px; margin-right: 10px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/1%20HomePage.png" alt="Home Page" style="width: 300px; margin-right: 5px;">
+  <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/2%20Sign%20up%20page.png" alt="Sign Up Page" style="width: 300px; margin-right: 5px;">
   <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/3%20User%20Signed%20Up.png" alt="User Signed Up" style="width: 300px;">
   <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/4%20User%20Logged%20In.png" alt="User Logged In" style="width: 300px;">
   <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/3%20User%20Signed%20Up.png" alt="Dashboard visible to Logged in user" style="width: 300px;">
@@ -51,16 +65,6 @@ This project involves developing a chat widget that allows users to interact wit
   <img src="https://github.com/artirocks/artisan-chatbot/blob/main/snaps/15%20Fetch%20persisted%20Chat%20history.png" alt="Persisted Chat History" style="width: 300px;">
 </div>
 
-
-
-## Technology Used
-
-- **Python:** To build the API for the chat service.
-- **GemeiniAI:** To handle message responses and act as the chatbot.
-- **FastAPI:** For creating the API endpoints and managing asynchronous communication.
-- **React:** For building the user interface of the chat widget.
-- **Chakra UI:** For styling the chat widget and ensuring a responsive, modern design.
-- **OAuth2:** For implementing secure authentication and authorization.
 
 # Project Structure
 ```
@@ -83,6 +87,9 @@ ARTISAN-CHATBOT/
 |   |── db
 │   │   ├── message_store.json
 │   │   └── users_db.json
+|   |── tests
+│   │   ├── test_authentication.py
+│   │   └── test_chatbotserver.py
 │   ├── requirements.txt
 |   |── .gitignore
 │   └── README.md   
@@ -137,10 +144,13 @@ Windows
 
 `pip install -r requirements.txt`
 
+### Update .env file
+Add GOOGLE_API_KEY in backed .env file. It has been shared via email.
+
 ### Run APIs
 `python -m uvicorn main:app`
 
-NOTE: Gemini API_KEY is shared via mail.
+*NOTE: To use Gemini model GOOGLE_API_KEY is required which has been shared via email.*
 
 ## UI
 
